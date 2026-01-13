@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // ---------- Configuración global ----------
+const faccion = "Hackers del Vacío";
+
+//------ feature-personaje --------- (Persona A)
+
+//Definir variables
+let listaMercenarios = [];
+let nivelSeguridad = 9;
+
+//funcion de registro
+function agregarMercenario(nombre, habilidadEspecial) {
+  let mercenario = { //crear un objeto
+    nombre: nombre.toUpperCase(),
+    habilidad: habilidadEspecial
+  };
+  listaMercenarios.push(mercenario);
+  return `Mercenario ${mercenario.nombre} agregado exitosamente.`;
+}
+
+//funcion de consulta
+function imprimirMercenarios() {
+  if (listaMercenarios.length === 0) {
+    console.log("No hay mercenarios registrados.");
+    return;
+  }
+  for (let i = 0; i < listaMercenarios.length; i++) {
+    console.log(`Mercenario ${listaMercenarios[i].nombre} | Habilidad: ${listaMercenarios[i].habilidad}`);
+  }
+}
+
+//verificar rango
+function verificarRango(nombre) {
+  let i = 0;
+  let encontrado = false;
+  let nombreBuscado = nombre.toUpperCase();
+  while (i < listaMercenarios.length) {
+    if (listaMercenarios[i].nombre === nombreBuscado) {
+      encontrado = true;
+      break;
+    } else {
+      i++;
+    }
+  }
+  if (encontrado) {
+    return `El Mercenario ${nombreBuscado} tiene Rango: ${listaMercenarios[i].habilidad}.`;
+  } else {
+    return `El Mercenario ${nombreBuscado} No existe en el registro.`;
+  }
+}
+
+// ---------- feature-misiones ---------- (Persona B)
+let misiones = [
+  "Hackeo de datos",
+  "Escolta",
+  "Intrusión en red corporativa",
+];
+
+//Calculamos la recompensa
+function calcularRecompensa(dificultad, bono = 500) {
+  const base = dificultad * 1000; 
+  const total = base + bono;
+  return total;
+}
+
+//Simulación de peligro con do-while
+function simularPeligro() {
+  let intentos = 0;
+  let numero;
+  let log = [];
+
+  do {
+    numero = Math.floor(Math.random() * 10) + 1; // 1-10
+    intentos++;
+    log.push(`Intento ${intentos}: señal=${numero}`);
+  } while (numero <= 8 && intentos < 5);
+
+  const estado = numero > 8 ? "ALTO" : "MODERADO";
+  return {
+    intentos,
+    ultimaSeñal: numero,
+    nivelPeligro: estado,
+    log
+  };
+}
+
+//Validación de misión
+function validarMision(nombreMision) {
+  const ilegales = [
+    "Robo de datos",
+    "Sabotaje industrial",
+    "Intrusión en red corporativa"
+  ];
+  const legales = [
+    "Escolta",
+    "Auditoría de seguridad",
+    "Recuperación de credenciales"
+  ];
+
+  if (ilegales.includes(nombreMision)) {
+    return { nombre: nombreMision, legalidad: "Ilegal" };
+  } else if (legales.includes(nombreMision)) {
+    return { nombre: nombreMision, legalidad: "Legal" };
+  } else {
+    return { nombre: nombreMision, legalidad: "Desconocida" };
+  }
+}
+
+// ---------- Función Maestra (main) ----------
+function ejecutarContrato(nombreMercenario, habilidadMercenario, nombreMision, dificultadMision, bonoMision = 500) {
+  
+  // Función interna: validarAcceso
+  function validarAcceso(nivelFaccion, dificultad) {
+    return nivelFaccion >= dificultad;
+  }
+
+  // Registro del mercenario
+  const registro = agregarMercenario(nombreMercenario, habilidadMercenario);
+
+  // Verificación de rango
+  const rango = verificarRango(nombreMercenario);
+
+  // Validación de misión
+  const estadoMision = validarMision(nombreMision);
+
+  // Cálculo de recompensa
+  const recompensa = calcularRecompensa(dificultadMision, bonoMision);
+
+  // Simulación de peligro
+  const peligro = simularPeligro();
+
+  // Validación de acceso
+  const acceso = validarAcceso(nivelSeguridad, dificultadMision);
+
+  // Resumen final
+  console.log("========== RESUMEN DEL CONTRATO ==========");
+  console.log(registro);
+  console.log(rango);
+  console.log(`Misión: ${estadoMision.nombre} | Estado: ${estadoMision.legalidad}`);
+  console.log(`Acceso: ${acceso ? "APROBADO" : "DENEGADO"} (nivelSeguridad=${nivelSeguridad}, dificultad=${dificultadMision})`);
+  console.log(`Recompensa: ${recompensa} créditos`);
+  console.log(`Nivel de peligro: ${peligro.nivelPeligro} | Intentos=${peligro.intentos}, Última señal=${peligro.ultimaSeñal}`);
+  console.log("Log de peligro:");
+  console.log(peligro.log.join("\n"));
+  console.log("Equipo actual:");
+  imprimirMercenarios();
+}
+
+// ---------- Ejemplo de uso ----------
+ejecutarContrato("Raul", "Hacker Senior", "Hackeo de datos", 7, 1000);
+    </script>
+</body>
+</html>
